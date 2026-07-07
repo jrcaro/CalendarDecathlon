@@ -9,8 +9,6 @@ from utils import *
 import argparse
 import sys
 
-DEBUG = False
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -40,14 +38,16 @@ def main(
     time.sleep(2)
 
     # Cookies
-    if DEBUG:
-        driver.find_element(By.ID, "didomi-notice-agree-button").click()
+    #driver.find_element(By.ID, "didomi-notice-agree-button").click()
 
     # Get token
     logger.info("Get authentication header")
     logs = driver.get_log("performance")
     sel_requests = [json.loads(lr["message"])["message"] for lr in logs]
     sel_headers = list(filter(log_filter, sel_requests))[0]["params"]["request"]["headers"]
+
+    # Exit selenium
+    driver.quit()
 
     # Get contract end date
     logger.info("Call collaborator endpoint")

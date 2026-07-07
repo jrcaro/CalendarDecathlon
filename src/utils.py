@@ -59,26 +59,28 @@ def calendar_service():
     return service
 
 
-def get_driver(debug):
+def get_driver():
     # The log disable with the option headless=new is not working
     logging.getLogger('selenium').setLevel(logging.ERROR)
 
-    chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+    chrome_service = Service('/usr/local/bin/chromedriver')
 
     chrome_options = Options()
     options = [
-        "--disable-gpu",
-        "--window-size=1920,1200",
-        "--ignore-certificate-errors",
-        "--disable-extensions",
-        "--no-sandbox",
-        "--disable-dev-shm-usage"
+        '--headless',
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-extensions',
+        '--start-maximized',
+        '--disk-cache-size=1',
+        '--media-cache-size=1',
+        '--incognito',
+        '--remote-debugging-port=9222',
+        '--aggressive-cache-discard'
     ]
     for option in options:
         chrome_options.add_argument(option)
-
-    if not debug:
-        chrome_options.add_argument("--headless=new")
 
     return webdriver.Chrome(service=chrome_service, options=chrome_options)
 
