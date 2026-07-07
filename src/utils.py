@@ -82,6 +82,8 @@ def get_driver():
     for option in options:
         chrome_options.add_argument(option)
 
+    chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
+
     return webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 def log_filter(log_):
