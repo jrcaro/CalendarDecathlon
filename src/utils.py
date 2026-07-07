@@ -6,13 +6,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google.auth.identity_pool import Credentials
+from google.auth.identity_pool import Credentials as credPool
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from constants import SCOPES
 import os
-import logging
+from logger import logger
 
 def calendar_service():
     """Shows basic usage of the Google Calendar API.
@@ -21,9 +21,10 @@ def calendar_service():
     creds = None
     try:
         # Github execution
-        creds = Credentials.from_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
-        scopes=SCOPES
+        logger.info("Github execution. Reading Google credentials JSON")
+        creds = credPool.from_file(
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+            scopes=SCOPES
     )
 
         # If there are no (valid) credentials available, let the user log in.
@@ -35,6 +36,8 @@ def calendar_service():
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
+        logger.info("Local execution. Reading local credentials JSON")
+
         if os.path.exists("token.json"):
             creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         # If there are no (valid) credentials available, let the user log in.
@@ -61,7 +64,7 @@ def calendar_service():
 
 def get_driver():
     # The log disable with the option headless=new is not working
-    logging.getLogger('selenium').setLevel(logging.ERROR)
+    logger.info('Configuring Chrome driver')
 
     chrome_service = Service('/usr/local/bin/chromedriver')
 
