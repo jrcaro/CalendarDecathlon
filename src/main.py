@@ -25,7 +25,7 @@ def main(
 ):
     # Selenium driver
     logger.info("Create selenium driver")
-    driver = get_driver(DEBUG)
+    driver = get_driver()
     logger.info("Go to login endpoint")
     driver.get(LOGIN_ENDPOINT)
     time.sleep(2)
